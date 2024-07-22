@@ -33,12 +33,12 @@ jobs:
 
       - run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build linux-libc-dev linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          sudo apt-get install -y linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           
           export DATESTRING=$(date "+%Y-%m-%d")
           export COMMIT=$(git rev-parse --short=10 "$GITHUB_SHA")
           
-          ./configure --shared --ninja --without-npm --without-corepack --dest-cpu arm64 --with-arm-float-abi hard --with-arm-fpu neon
+          ./configure --shared --without-npm --without-corepack --dest-cpu arm64 --with-arm-float-abi hard --with-arm-fpu neon
           time make -j$(nproc)
 
           find out

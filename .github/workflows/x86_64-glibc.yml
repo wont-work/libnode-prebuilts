@@ -5,6 +5,9 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
+permissions: 
+  contents: write
+
 env:
   LDFLAGS: "-fuse-ld=mold"
 
@@ -32,9 +35,9 @@ jobs:
           ./configure --shared --ninja --without-npm --without-corepack
           time make -j$(nproc)
 
-          ls -lah out/Release
+          find out/Release
 
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: x86_64-glibc
-          files: out/Release/libnode.so
+          files: out/Release/lib/libnode.so

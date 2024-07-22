@@ -43,9 +43,7 @@ jobs:
           ./configure --shared --without-npm --without-corepack --dest-cpu arm64 --with-arm-float-abi hard --with-arm-fpu neon
           time make -j$(nproc)
 
-          find out
-
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: arm64-glibc
-          files: out/Release/lib/libnode.*
+          files: out/Release/libnode.*

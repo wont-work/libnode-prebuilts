@@ -1,0 +1,39 @@
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+env:
+  LDFLAGS: "-fuse-ld=mold"
+
+jobs:
+  x86_64-glibc:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: https://github.com/mmomtchev/node
+          ref: napi-libnode
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: |
+          sudo apt-get install -y mold ninja
+          
+          export DATESTRING=$(date "+%Y-%m-%d")
+          export COMMIT=$(git rev-parse --short=10 "$GITHUB_SHA")
+          
+          ./configure --shared --ninja --without-npm --without-corepack
+          time make -j$(nproc)
+
+          ls -lah out/Release
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: x86_64-glibc
+          files: out/Release/libnode.so

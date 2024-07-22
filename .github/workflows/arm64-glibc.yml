@@ -34,6 +34,8 @@ jobs:
       - run: |
           sudo apt-get update
           sudo apt-get install -y linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
+          curl -L https://github.com/nodejs/node/commit/cdd03ef3957bf9ba6cd6083db9cf543d5343c5b3.patch | patch -p1 --merge
           
           export DATESTRING=$(date "+%Y-%m-%d")
           export COMMIT=$(git rev-parse --short=10 "$GITHUB_SHA")

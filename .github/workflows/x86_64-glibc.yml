@@ -40,4 +40,4 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: x86_64-glibc
-          files: out/Release/lib/libnode.so
+          files: out/Release/lib/libnode.*

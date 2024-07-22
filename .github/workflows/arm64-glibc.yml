@@ -18,7 +18,7 @@ env:
   RANLIB: "aarch64-linux-gnu-ranlib"
 
 jobs:
-  x86_64-glibc:
+  arm64-glibc:
     runs-on: ubuntu-24.04
 
     steps:

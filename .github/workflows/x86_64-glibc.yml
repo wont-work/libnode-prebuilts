@@ -35,7 +35,7 @@ jobs:
           ./configure --shared --ninja --without-npm --without-corepack
           time make -j$(nproc)
 
-          find out/Release
+          find out/Release/lib
 
       - uses: softprops/action-gh-release@v2
         with:

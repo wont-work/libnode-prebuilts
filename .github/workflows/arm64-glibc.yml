@@ -36,9 +36,10 @@ jobs:
           python-version: "3.12"
 
       - run: |
+          sudo dpkg --add-architecture arm64
           sudo apt-get update
           sudo apt-get install -y linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
-                                  libbrotli-dev libc-ares-dev libnghttp2-dev libnghttp3-dev libngtcp2-dev libssl-dev zlib1g-dev
+                                  libbrotli-dev:arm64 libc-ares-dev:arm64 libnghttp2-dev:arm64 libnghttp3-dev:arm64 libngtcp2-dev:arm64 libssl-dev:arm64 zlib1g-dev:arm64
 
           curl -L https://github.com/nodejs/node/commit/cdd03ef3957bf9ba6cd6083db9cf543d5343c5b3.patch | patch -p1 --merge
           

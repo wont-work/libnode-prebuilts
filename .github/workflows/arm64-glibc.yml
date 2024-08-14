@@ -38,7 +38,7 @@ jobs:
       - run: |
           sudo dpkg --add-architecture arm64
           sudo sed 's/deb http/deb \[arch=amd64,i386\] http/' -i /etc/apt/sources.list
-          echo >/etc/apt/sources.list <<EOF
+          echo | sudo tee /etc/apt/sources.list <<EOF
           deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -cs) main universe restricted multiverse
           deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -cs)-updates main universe restricted multiverse
           deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -cs)-security main universe restricted multiverse

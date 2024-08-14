@@ -9,7 +9,9 @@ permissions:
   contents: write
 
 env:
-  LDFLAGS: "-fuse-ld=mold"
+  # https://github.com/nodejs/node/issues/47865
+  CFLAGS: "-fno-ipa-icf"
+  CXXFLAGS: "-fno-ipa-icf"
 
 jobs:
   x86_64-glibc:
@@ -27,8 +29,8 @@ jobs:
 
       - run: |
           sudo apt-get update
-          sudo apt-get install -y mold ninja-build \
-                                  libbrotli-dev libc-ares-dev libicu-dev libnghttp2-dev libnghttp3-dev libngtcp2-dev libssl-dev zlib1g-dev
+          sudo apt-get install -y ninja-build \
+                                  libbrotli-dev libc-ares-dev libnghttp2-dev libnghttp3-dev libngtcp2-dev libssl-dev zlib1g-dev
 
           
           export DATESTRING=$(date "+%Y-%m-%d")
@@ -37,7 +39,6 @@ jobs:
           ./configure --shared --ninja --enable-lto --without-npm --without-corepack \
             --shared-brotli \
             --shared-cares \
-            --with-intl=system-icu \
             --shared-nghttp2 \
             --shared-nghttp3 \
             --shared-ngtcp2 \

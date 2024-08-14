@@ -47,7 +47,6 @@ jobs:
             --shared-zlib
 
           make BUILDTYPE=Release -j$(nproc)
-          strip out/Release/lib/libnode.so.* || true
 
       - uses: softprops/action-gh-release@v2
         with:

@@ -33,15 +33,27 @@ jobs:
 
       - run: |
           sudo apt-get update
-          sudo apt-get install -y linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          sudo apt-get install -y linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
+                                  libbrotli-dev libc-ares-dev libicu-dev libnghttp2-dev libnghttp3-dev libngtcp2-dev libssl-dev zlib1g-dev
 
           curl -L https://github.com/nodejs/node/commit/cdd03ef3957bf9ba6cd6083db9cf543d5343c5b3.patch | patch -p1 --merge
           
           export DATESTRING=$(date "+%Y-%m-%d")
           export COMMIT=$(git rev-parse --short=10 "$GITHUB_SHA")
           
-          ./configure --shared --without-npm --without-corepack --dest-cpu arm64 --with-arm-float-abi hard --with-arm-fpu neon
-          time make -j$(nproc)
+          ./configure --shared --without-npm --without-corepack --dest-cpu arm64 --with-arm-float-abi hard --with-arm-fpu neon --enable-lto \
+            --shared-brotli \
+            --shared-cares \
+            --with-intl=system-icu \
+            --shared-nghttp2 \
+            --shared-nghttp3 \
+            --shared-ngtcp2 \
+            --shared-openssl \
+            --openssl-use-def-ca-store \
+            --shared-zlib
+
+          make BUILDTYPE=Release -j$(nproc)
+          strip out/Release/libnode.* || true
 
       - uses: softprops/action-gh-release@v2
         with:

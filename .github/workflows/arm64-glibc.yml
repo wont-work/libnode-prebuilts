@@ -36,31 +36,15 @@ jobs:
           python-version: "3.12"
 
       - run: |
-          sudo dpkg --add-architecture arm64
-          sudo sed 's/deb http/deb \[arch=amd64,i386\] http/' -i /etc/apt/sources.list
-          echo | sudo tee /etc/apt/sources.list <<EOF
-          deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -cs) main universe restricted multiverse
-          deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -cs)-updates main universe restricted multiverse
-          deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -cs)-security main universe restricted multiverse
-          EOF
-          sudo apt-get update || true
-          sudo apt-get install -y linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
-                                  libbrotli-dev:arm64 libc-ares-dev:arm64 libnghttp2-dev:arm64 libnghttp3-dev:arm64 libngtcp2-dev:arm64 libssl-dev:arm64 zlib1g-dev:arm64
+          sudo apt-get update
+          sudo apt-get install -y linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
           curl -L https://github.com/nodejs/node/commit/cdd03ef3957bf9ba6cd6083db9cf543d5343c5b3.patch | patch -p1 --merge
           
           export DATESTRING=$(date "+%Y-%m-%d")
           export COMMIT=$(git rev-parse --short=10 "$GITHUB_SHA")
           
-          ./configure --shared --without-npm --without-corepack --dest-cpu arm64 --with-arm-float-abi hard --with-arm-fpu neon --enable-lto \
-            --shared-brotli \
-            --shared-cares \
-            --shared-nghttp2 \
-            --shared-nghttp3 \
-            --shared-ngtcp2 \
-            --shared-openssl \
-            --openssl-use-def-ca-store \
-            --shared-zlib
+          ./configure --shared --without-npm --without-corepack --dest-cpu arm64 --with-arm-float-abi hard --with-arm-fpu neon --enable-lto --openssl-use-def-ca-store
 
           make BUILDTYPE=Release -j$(nproc)
 
